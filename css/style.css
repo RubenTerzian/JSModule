@@ -1,0 +1,108 @@
+p {
+  margin: 0;
+}
+
+main {
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  max-width: 600px;
+}
+
+.calendar-container .hour-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-top: 1px solid #e2e2e2;
+  width: 250px;
+}
+
+.calendar-container .hour-block .number {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 120px;
+  width: 50px;
+  font-size: 16px;
+}
+
+.calendar-container .hour-block p {
+  padding: 5px;
+}
+
+.calendar-container .hour-block .plan {
+  position: relative;
+  width: 200px;
+  height: 120px;
+}
+
+.calendar-container .hour-block .plan .single-event {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-color: #E2ECF5;
+  border-left: 3px solid #6E9ECF;
+  position: absolute;
+  width: 100%;
+}
+
+.calendar-container .hour-block .plan .double-event {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-color: #E2ECF5;
+  border-left: 3px solid #6E9ECF;
+  position: absolute;
+  width: 50%;
+}
+
+.hour-and-half {
+  font-size: 12px;
+  margin-top: 35px;
+}
+
+.action-container {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.action-container .add-event {
+  z-index: -1;
+  height: 50px;
+  width: 50px;
+}
+
+.action-container .add-event img {
+  width: 100%;
+}
+
+.action-container .add-event.active {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.action-container .event-info {
+  position: absolute;
+  top: 50px;
+}
+
+.action-container .event-info select {
+  text-align: center;
+  width: 150px;
+  margin: 10px 0;
+}
+/*# sourceMappingURL=style.css.map */
