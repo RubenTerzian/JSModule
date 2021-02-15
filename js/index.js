@@ -54,7 +54,7 @@ class Calendar{
                     const currentEventsArray = eventArray.filter(el => 
                         el.start <= eventData.start+eventData.duration && el.start+el.duration >= eventData.start
                     )
-                    console.log(currentEventsArray)
+                    // ТУТ НАДО ДОПИЛИТЬ ЛОГИКУ
                     if (currentEventsArray.length > 1) {
                         alert('to many')
                     } else {
@@ -147,13 +147,6 @@ class Calendar{
             const removedEvent = eventArray.filter(el=> el.duration == elem.offsetHeight / 2 && el.start == elem.offsetTop / 2 && el.title == elem.firstElementChild.innerText)
             const removedEventIndex = eventArray.indexOf(removedEvent[0]);
             eventArray.splice(removedEventIndex, 1)
-            modalWindow.addEventListener('click', event => {
-                    if(event.target.className === 'modal'){
-                    event.target.innerText='';
-                    event.target.className += " disabled";
-                };
-            
-            })
             modalWindow.innerText='';
             modalWindow.className += " disabled";
             this.renderEvents()
