@@ -176,7 +176,6 @@ class Calendar{
             event.innerHTML = ` <p>${eventData.title}</p> `;
             event.id = eventData.id
             calendarEvents.append(event);
-            console.log(event)
             this.modal(eventData, event)
         });
 
