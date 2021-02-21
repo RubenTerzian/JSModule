@@ -26,6 +26,10 @@ class Calendar{
 
     addEvent() {
         let id = 1;
+
+        const clearInput = (input)=>{
+            input.value = "";
+        }
         // Show and hides inputs
         const eventInfo = document.querySelector(".event-info")
         const addEventButton = document.querySelector(".add-event");
@@ -34,6 +38,9 @@ class Calendar{
                 event.target.parentNode.className += " active";
                 eventInfo.className = "event-info"
             } else {
+                clearInput(inpAddTitle);
+                clearInput(inpAddStartTime);
+                clearInput(inpAddEndTime);
                 event.target.parentNode.className = "add-event";
                 eventInfo.className = "event-info disabled"
             }
@@ -74,6 +81,9 @@ class Calendar{
                     const currentEventsArray = arrayForRender.filter(el => 
                         el.start <= eventData.start+eventData.duration && el.start+el.duration >= eventData.start
                     )
+                    clearInput(inpAddTitle);
+                    clearInput(inpAddStartTime);
+                    clearInput(inpAddEndTime);
                     if (currentEventsArray.length > 1) {
                         alert('Only 2 events at the same time')
                     } else {
