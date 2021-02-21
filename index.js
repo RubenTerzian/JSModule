@@ -82,7 +82,6 @@ class Calendar{
                         arrayForRender.push(eventDataForRender)
                         arrayForRender.sort((a,b)=>a.start-b.start)
                         this.renderEvents();
-                        this.modal();
                     }
                 }
             }
@@ -91,65 +90,48 @@ class Calendar{
         
     }
 
-    modal() {
-        const eventsArray = document.querySelectorAll(".single-event, .double-event");
-        eventsArray.forEach(element => {
+    modal(eventForRender, event) {
+        event.addEventListener('click', e => {
+
+        const modalContent = document.createElement('div');
+        modalContent.innerHTML = `
             
-            console.log(arrayForRender)
-            element.addEventListener('click', e => {
-            const eventForRender = arrayForRender.find(data=>{
-                if(e.target.id){
-                    return data.id == e.target.id
-                }else{
-                    return data.id == e.target.parentNode.id
-                }
-            });
+            <div>
+                <h3>Name of event</h3>
+                <input type="text" name="title" placeholder="Введите имя события..." id="modal-input-add-title" value="${eventForRender.title}">
+            </div>
+            <div>
+                <h3>Start</h3>
+                <input type="time" min="08:00" max="17:00" id="modal-input-add-start-time" value="${eventForRender.startTime}">
+            </div>
+            <div>
+                <h3>End</h3>
+                <input type="time" min="08:00" max="17:00" id="modal-input-add-end-time" value="${eventForRender.endTime}">
+            </div>
+            <div class="modal-color">
+                <h3>Choose a color</h3>
+                <input type="color" id="modal-input-set-color" value="${eventForRender.color}">
+            </div>
+            <button id="btn-change-event">Save</button>
+            <div class="delete-wraper">
+                <img src="img/delete.png" alt="image" class="delete-btn">
+            </div>
+        `
+        modalWindow.append(modalContent)
 
-            // const eventData = eventDataArray.find(data=>{
-            //     data.title == eventForRender.title
-            // });
-            
-
-            const modalContent = document.createElement('div');
-            modalContent.innerHTML = `
-                
-                <div>
-                    <h3>Name of event</h3>
-                    <input type="text" name="title" placeholder="Введите имя события..." id="modal-input-add-title" value="${eventForRender.title}">
-                </div>
-                <div>
-                    <h3>Start</h3>
-                    <input type="time" min="08:00" max="17:00" id="modal-input-add-start-time" value="${eventForRender.startTime}">
-                </div>
-                <div>
-                    <h3>End</h3>
-                    <input type="time" min="08:00" max="17:00" id="modal-input-add-end-time" value="${eventForRender.endTime}">
-                </div>
-                <div class="modal-color">
-                    <h3>Choose a color</h3>
-                    <input type="color" id="modal-input-set-color" value="${eventForRender.color}">
-                </div>
-                <button id="btn-change-event">Save</button>
-                <div class="delete-wraper">
-                    <img src="img/delete.png" alt="image" class="delete-btn">
-                </div>
-            `
-            modalWindow.append(modalContent)
-
-                modalWindow.className = 'modal';
-                modalContent.className = "modal-content";
-                const deleteBtn = document.querySelector(".delete-btn");
-                modalWindow.addEventListener('click', event => {
-                    if(event.target.className === 'modal'){
-                        event.target.innerText='';
-                        event.target.className += " disabled";
-                    };
-                })
-                this.removeEvent(deleteBtn, eventForRender)
-                this.changeEvent(eventForRender)
+            modalWindow.className = 'modal';
+            modalContent.className = "modal-content";
+            const deleteBtn = document.querySelector(".delete-btn");
+            modalWindow.addEventListener('click', event => {
+                if(event.target.className === 'modal'){
+                    event.target.innerText='';
+                    event.target.className += " disabled";
+                };
             })
+            this.removeEvent(deleteBtn, eventForRender, event)
+            this.changeEvent(eventForRender, event)
         })
-        
+    
     }
 
     renderEvents() {
@@ -194,24 +176,28 @@ class Calendar{
             event.innerHTML = ` <p>${eventData.title}</p> `;
             event.id = eventData.id
             calendarEvents.append(event);
-            
+            console.log(event)
+            this.modal(eventData, event)
         });
 
     }
 
-    removeEvent(btn, event) {
+    removeEvent(btn, eventForRender, event) {
         btn.addEventListener('click', e => {
-            const removedEventIndex = arrayForRender.indexOf(event);
-            arrayForRender.splice(removedEventIndex, 1)
+            const removedEventFromArrayForRenderIndex = arrayForRender.indexOf(eventForRender);
+            arrayForRender.splice(removedEventFromArrayForRenderIndex, 1)
+            const removedEventFromEventDataArray = eventDataArray.find(data => data.start == eventForRender.start && data.duration == eventForRender.duration && data.title == eventForRender.title)
+            const removedEventFromEventDataArrayIndex = eventDataArray.indexOf(removedEventFromEventDataArray);
+            eventDataArray.splice(removedEventFromEventDataArrayIndex, 1)
             modalWindow.innerText='';
             modalWindow.className += " disabled";
-            this.renderEvents(event)
-            this.modal(event)
+            this.renderEvents()
+            this.modal(eventForRender, event)
         })
             
     }
 
-    changeEvent(event){
+    changeEvent(eventForRender, event){
         const btnChangeEvent = document.querySelector('#btn-change-event');
         const validStartTime = (elem)=> {
             let timeArr = elem.split(':');
@@ -223,6 +209,11 @@ class Calendar{
             const inpAddEndTime = document.querySelector('#modal-input-add-end-time');
             const inpSetColor = document.querySelector('#modal-input-set-color');
 
+            const changingEvent = eventDataArray.find(data => 
+                data.start == eventForRender.start 
+                && data.duration == eventForRender.duration 
+                && data.title == eventForRender.title)
+
             if (inpAddStartTime.value < inpAddStartTime.min 
                 || inpAddStartTime.value > inpAddStartTime.max 
                 || inpAddEndTime.value < inpAddEndTime.min 
@@ -232,13 +223,16 @@ class Calendar{
                 if (inpAddStartTime.value >= inpAddEndTime.value) {
                     alert("The end time must be greater than the start time of the event")
                 } else {
-                        event.start = validStartTime(inpAddStartTime.value)-8*60
-                        event.duration = validStartTime(inpAddEndTime.value)-8*60 - event.start
-                        event.title = inpAddTitle.value;
-                        event.color = inpSetColor.value;
+                    eventForRender.start = validStartTime(inpAddStartTime.value)-8*60
+                    eventForRender.duration = validStartTime(inpAddEndTime.value)-8*60 - eventForRender.start
+                    eventForRender.title = inpAddTitle.value;
+                    eventForRender.color = inpSetColor.value;
+                    changingEvent.start = validStartTime(inpAddStartTime.value)-8*60
+                    changingEvent.duration = validStartTime(inpAddEndTime.value)-8*60 - eventForRender.start
+                    changingEvent.title = inpAddTitle.value;
                         arrayForRender.sort((a,b)=>a.start-b.start)
-                        this.renderEvents(event)
-                        this.modal(event);
+                        this.renderEvents()
+                        this.modal(eventForRender, event);
                         
                         modalWindow.innerText='';
                         modalWindow.className += " disabled";
@@ -250,7 +244,5 @@ class Calendar{
 }
 
 const calendar = new Calendar();
-calendar.renderEvents();
-calendar.modal();
 calendar.addEvent();
 
