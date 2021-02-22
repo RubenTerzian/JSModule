@@ -96,8 +96,6 @@ class Calendar{
                 }
             }
         })
-
-        
     }
 
     modal(eventForRender, event) {
